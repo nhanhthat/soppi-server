@@ -15,7 +15,7 @@ app.use(cors([{
     origin: 'http://localhost:3000'
   },
   {
-    origin: 'https://sansalesapsan.online/'
+    origin: 'https://sansalesapsan.online'
   }
 ]));
 
