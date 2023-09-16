@@ -15,7 +15,7 @@ app.use(cors());
 
 db.connect()
 
-app.post('/api/live_x', async (req, res) => {
+app.post('https://sansalesapsan.online/api/live_x', async (req, res) => {
     try {
         const links = await Link.find({})
         let num = 0
