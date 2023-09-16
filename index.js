@@ -26,7 +26,7 @@ app.post('/api/live_x', async (req, res) => {
         links.forEach ((link) => {
             if (link.queue > num) {
                 num = link.queue
-            }s
+            }
         })  
         const link = new Link (req.body)
         link.queue = num + 1
