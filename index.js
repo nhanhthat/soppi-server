@@ -48,7 +48,7 @@ app.post('/api/live_x', async (req, res) => {
                   return;
                 }
               }
-        }, 200)
+        }, 500)
     } catch (error) {
         res.json({status : 500})
     }
