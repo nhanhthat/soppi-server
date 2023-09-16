@@ -11,13 +11,13 @@ app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 dotenv.config()
 app.use(morgan('combined'))
-app.use(cors([{
-    origin: 'http://localhost:3000'
-  },
-  {
-    origin: 'https://sansalesapsan.online'
-  }
-]));
+// app.use(cors([{
+//     origin: 'http://localhost:3000'
+//   },
+//   {
+//     origin: 'https://sansalesapsan.online'
+//   }
+// ]));
 
 db.connect()
 
