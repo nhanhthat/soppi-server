@@ -19,7 +19,10 @@ app.use(cors([
 
 db.connect()
 
+
 app.post('/api/live_x', async (req, res) => {
+
+
     try {
       const links = await Link.find({})
       let num = 0
@@ -31,6 +34,7 @@ app.post('/api/live_x', async (req, res) => {
       const link = new Link (req.body)
       link.queue = num + 1
       await link.save()
+      let isChanged = false;
 
       let int = setInterval(async () => {
           const links1 = await Link.find({})
@@ -38,20 +42,24 @@ app.post('/api/live_x', async (req, res) => {
             if (link.queue == num + 1) {
               if (link.status != 0) {
                 await Link.deleteOne({ queue: num + 1 });
-                clearInterval(int)
-                if (link.status == 1) {
+                if (isChanged == false) {
+                  isChanged = true
+                  if (link.status == 1) {
                     res.json({ status: 200, message: 'success' });
-                } else if (link.status == -1){
-                    res.json({ status: 200, message: 'fail' });
+                  } else if (link.status == -1){
+                      res.json({ status: 200, message: 'fail' });
+                  }
+                  clearInterval(int)
                 }
               }
               return;
             }
           }
-    }, 200)
-  } catch (error) {
-      res.json({status : 500})
-  }
+      }, 200)
+
+    } catch (error) {
+        res.json({status : 500})
+    }
 })
 
 app.listen(port, () => {
