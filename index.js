@@ -42,7 +42,7 @@ app.post('/api/live_x', async (req, res) => {
             if (link.queue == num + 1) {
               if (link.status != 0) {
                 // await Link.deleteOne({ queue: num + 1 });
-                await Link.updateOne({queue : num + 1},{delete : true})
+                await Link.updateOne({queue : num + 1},{delete1 : true})
                 if (isChanged == false) {
                   isChanged = true
                   if (link.status == 1) {
