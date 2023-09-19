@@ -27,6 +27,7 @@ app.get('/get-links', async (req, res) => {
 
 app.post('/api/live_x', async (req, res) => {
     try {
+        let ischanged = false;
         const links = await Link.find({})
         let num = 0
         links.forEach ((link) => {
@@ -45,10 +46,13 @@ app.post('/api/live_x', async (req, res) => {
                   if (link.status != 0) {
                     await Link.deleteOne({ queue: num + 1 });
                     clearInterval(int)
-                    if (link.status == 1) {
-                        res.json({ status: 200, message: 'success' });
-                    } else if (link.status == -1){
-                        res.json({ status: 200, message: 'fail' });
+                    if (ischanged == false){
+                        ischanged = true
+                        if (link.status == 1) {
+                            res.json({ status: 200, message: 'success' });
+                        } else if (link.status == -1){
+                            res.json({ status: 200, message: 'fail' });
+                        }
                     }
                   }
                   return;
