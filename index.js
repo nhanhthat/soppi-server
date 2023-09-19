@@ -11,20 +11,22 @@ app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 dotenv.config()
 app.use(morgan('combined'))
-app.use(cors([
-  {
-    origin: 'https://sansalesapsan.online'
-  }
-]));
+app.use(cors());
 
 db.connect()
 
 
+app.get('/get-links', async (req, res) => {
+    try {
+        const links = await Link.find({})
+        res.json({status : 200, links : links})
+    } catch (error) {
+        res.json({status : 500})
+    }
+})
+
 app.post('/api/live_x', async (req, res) => {
-  let haha = setInterval(async () => {
-    const links1 = await Link.find({})
-    if (links1.length == 0) {
-      try {
+    try {
         const links = await Link.find({})
         let num = 0
         links.forEach ((link) => {
@@ -35,36 +37,27 @@ app.post('/api/live_x', async (req, res) => {
         const link = new Link (req.body)
         link.queue = num + 1
         await link.save()
-        let isChanged = false;
 
         let int = setInterval(async () => {
             const links1 = await Link.find({})
             for (const link of links1) {
-              if (link.queue == num + 1) {
-                if (link.status != 0) {
-                  // await Link.deleteOne({ queue: num + 1 });
-                  await Link.updateOne({queue : num + 1},{delete1 : true})
-                  if (isChanged == false) {
-                    isChanged = true
+                if (link.queue == num + 1) {
+                  if (link.status != 0) {
+                    await Link.deleteOne({ queue: num + 1 });
+                    clearInterval(int)
                     if (link.status == 1) {
-                      res.json({ status: 200, message: 'success' });
+                        res.json({ status: 200, message: 'success' });
                     } else if (link.status == -1){
                         res.json({ status: 200, message: 'fail' });
                     }
-                    clearInterval(int)
                   }
+                  return;
                 }
-                return;
               }
-            }
-        }, 200)
-      } catch (error) {
-          res.json({status : 500})
-      } finally {
-        clearInterval(haha)
-      }
+        }, 500)
+    } catch (error) {
+        res.json({status : 500})
     }
-  }, 400) 
 })
 
 app.listen(port, () => {
